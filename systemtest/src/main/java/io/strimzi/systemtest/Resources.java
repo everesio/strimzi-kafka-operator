@@ -71,7 +71,6 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static io.strimzi.systemtest.AbstractST.GLOBAL_POLL_INTERVAL;
-import static io.strimzi.test.TestUtils.waitFor;
 
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public class Resources {
