@@ -715,10 +715,10 @@ public class Resources {
     }
 
     DoneableRoleBinding roleBinding(String yamlPath, String namespace, String clientNamespace) {
-        return roleBinding(roleBinding(yamlPath, namespace).build(), clientNamespace);
+        return roleBinding(defaultRoleBinding(yamlPath, namespace).build(), clientNamespace);
     }
 
-    RoleBindingBuilder roleBinding(String yamlPath, String namespace) {
+    RoleBindingBuilder defaultRoleBinding(String yamlPath, String namespace) {
         LOGGER.info("Creating RoleBinding from {} in namespace {}", yamlPath, namespace);
 
         return new RoleBindingBuilder(getRoleBindingFromYaml(yamlPath))
