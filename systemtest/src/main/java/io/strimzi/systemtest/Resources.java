@@ -80,7 +80,7 @@ public class Resources {
     private static final long TIMEOUT_FOR_DEPLOYMENT_CONFIG_READINESS = Duration.ofMinutes(7).toMillis();
     private static final long TIMEOUT_FOR_RESOURCE_CREATION = Duration.ofMinutes(5).toMillis();
     public static final long TIMEOUT_FOR_RESOURCE_READINESS = Duration.ofMinutes(7).toMillis();
-    private static final String KAFKA_VERSION = System.getenv().getOrDefault("ST_KAFKA_VERSION", "2.1.1");
+    protected static final String ST_KAFKA_VERSION = System.getenv().getOrDefault("ST_KAFKA_VERSION", "2.1.1");
 
     public static final String STRIMZI_PATH_TO_CO_CONFIG = "../install/cluster-operator/050-Deployment-strimzi-cluster-operator.yaml";
     public static final String STRIMZI_DEPLOYMENT_NAME = "strimzi-cluster-operator";
@@ -253,7 +253,7 @@ public class Resources {
                     .withMetadata(new ObjectMetaBuilder().withName(name).withNamespace(client().getNamespace()).build())
                     .withNewSpec()
                         .withNewKafka()
-                            .withVersion(KAFKA_VERSION)
+                            .withVersion(ST_KAFKA_VERSION)
                             .withReplicas(kafkaReplicas)
                             .withNewEphemeralStorage().endEphemeralStorage()
                             .addToConfig("offsets.topic.replication.factor", Math.min(kafkaReplicas, 3))
@@ -326,7 +326,7 @@ public class Resources {
         return new KafkaConnectBuilder()
             .withMetadata(new ObjectMetaBuilder().withName(name).withNamespace(client().getNamespace()).build())
             .withNewSpec()
-                .withVersion(KAFKA_VERSION)
+                .withVersion(ST_KAFKA_VERSION)
                 .withBootstrapServers(KafkaResources.plainBootstrapAddress(name))
                 .withReplicas(kafkaConnectReplicas)
                 .withResources(new ResourceRequirementsBuilder()
@@ -370,7 +370,7 @@ public class Resources {
         return new KafkaConnectS2IBuilder()
             .withMetadata(new ObjectMetaBuilder().withName(name).withNamespace(client().getNamespace()).build())
             .withNewSpec()
-                .withVersion(KAFKA_VERSION)
+                .withVersion(ST_KAFKA_VERSION)
                 .withBootstrapServers(KafkaResources.plainBootstrapAddress(name))
                 .withReplicas(kafkaConnectS2IReplicas)
             .endSpec();
@@ -405,7 +405,7 @@ public class Resources {
         return new KafkaMirrorMakerBuilder()
             .withMetadata(new ObjectMetaBuilder().withName(name).withNamespace(client().getNamespace()).build())
             .withNewSpec()
-                .withVersion(KAFKA_VERSION)
+                .withVersion(ST_KAFKA_VERSION)
                 .withNewConsumer()
                     .withBootstrapServers(tlsListener ? sourceBootstrapServer + "-kafka-bootstrap:9093" : sourceBootstrapServer + "-kafka-bootstrap:9092")
                     .withGroupId(groupId)
