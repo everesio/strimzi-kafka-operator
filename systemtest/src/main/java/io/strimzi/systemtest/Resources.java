@@ -1080,4 +1080,16 @@ public class Resources {
                 "username=\"" + kafkaUser.getMetadata().getName() + "\" \\\n" +
                 "password=\"" + password + "\";\n";
     }
+
+
+    private String getImageValueFromCO(String name) {
+        Deployment clusterOperator = getDeploymentFromYaml(STRIMZI_PATH_TO_CO_CONFIG);
+
+        List<EnvVar> listEnvVar = clusterOperator.getSpec().getTemplate().getSpec().getContainers().get(0).getEnv();
+        Optional<EnvVar> envVar = listEnvVar.stream().filter(e -> e.getName().equals(name)).findFirst();
+        if (envVar.isPresent()) {
+            return envVar.get().getValue();
+        }
+        return "";
+    }
 }
