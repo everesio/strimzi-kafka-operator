@@ -127,12 +127,23 @@ public class TopicOperatorIT extends BaseITST {
         LOGGER.info("Setting up test");
         CLUSTER.before();
         Runtime.getRuntime().addShutdownHook(kafkaHook);
-        kafkaCluster = new KafkaCluster();
-        kafkaCluster.addBrokers(1);
-        kafkaCluster.deleteDataPriorToStartup(true);
-        kafkaCluster.deleteDataUponShutdown(true);
-        kafkaCluster.usingDirectory(Files.createTempDirectory("operator-integration-test").toFile());
-        kafkaCluster.startup();
+
+        // Retries setup of kafkaCluster in case of setup failure
+        for (int triesLeft = 5; triesLeft != 0; triesLeft--) {
+            LOGGER.info("Tries left for test setup: {}", triesLeft);
+            try {
+                kafkaCluster = new KafkaCluster();
+                kafkaCluster.addBrokers(1);
+                kafkaCluster.deleteDataPriorToStartup(true);
+                kafkaCluster.deleteDataUponShutdown(true);
+                kafkaCluster.usingDirectory(Files.createTempDirectory("operator-integration-test").toFile());
+                kafkaCluster.startup();
+                triesLeft = 0;
+            } catch (Exception e) {
+                LOGGER.debug("Failed to start kafka cluster. Going to retry it. Number of tries left: {}", triesLeft);
+                e.printStackTrace();
+            }
+        }
 
         kubeClient = CLIENT.inNamespace(NAMESPACE);
         Crds.registerCustomKinds();
