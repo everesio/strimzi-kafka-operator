@@ -141,6 +141,8 @@ public class TopicOperatorIT extends BaseITST {
                 triesLeft = 0;
             } catch (Exception e) {
                 LOGGER.debug("Failed to start kafka cluster. Going to retry it. Number of tries left: {}", triesLeft);
+                kafkaCluster.shutdown();
+                kafkaCluster = null;
                 e.printStackTrace();
             }
         }
