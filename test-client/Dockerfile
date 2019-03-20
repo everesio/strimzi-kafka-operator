@@ -10,8 +10,6 @@ COPY scripts/dynamic_resources.sh /bin/dynamic_resources.sh
 
 ADD target/test-client-${STRIMZI_VERSION}.jar /test-client.jar
 
-RUN chmod 777 /test-client.jar
-
 USER 1001
 
 EXPOSE 4242/tcp
