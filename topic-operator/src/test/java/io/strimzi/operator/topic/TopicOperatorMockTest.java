@@ -213,7 +213,7 @@ public class TopicOperatorMockTest {
     private Config waitUntilTopicInKafka(String topicName, Predicate<Config> p) {
         ConfigResource configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
         AtomicReference<Config> ref = new AtomicReference<>();
-        waitFor("Creation of topic " + topicName, 1_000, 10_000, () -> {
+        waitFor("Creation of topic " + topicName, 1_000, 60_000, () -> {
             try {
                 Map<ConfigResource, Config> descriptionMap = adminClient.describeConfigs(asList(configResource)).all().get();
                 Config desc = descriptionMap.get(configResource);
