@@ -128,19 +128,20 @@ public class TopicOperatorIT extends BaseITST {
         CLUSTER.before();
         Runtime.getRuntime().addShutdownHook(kafkaHook);
 
+        kafkaCluster = new KafkaCluster();
+        kafkaCluster.addBrokers(1);
+        kafkaCluster.deleteDataPriorToStartup(true);
+        kafkaCluster.deleteDataUponShutdown(true);
+        kafkaCluster.usingDirectory(Files.createTempDirectory("operator-integration-test").toFile());
+
         for (int i = 1; i <= 5; i++) {
             try {
                 LOGGER.info("Running command, attempt: {}", i);
-                kafkaCluster = new KafkaCluster();
-                kafkaCluster.addBrokers(1);
-                kafkaCluster.deleteDataPriorToStartup(true);
-                kafkaCluster.deleteDataUponShutdown(true);
-                kafkaCluster.usingDirectory(Files.createTempDirectory("operator-integration-test").toFile());
                 kafkaCluster.startup();
+                break;
             } catch (Exception ex) {
-                LOGGER.debug("Failed to start kafka cluster. Going to retry it. Number of try: {}", i);
+                LOGGER.info("Failed to start kafka cluster. Going to retry it. Number of try: {}", i);
                 kafkaCluster.shutdown();
-                kafkaCluster = null;
                 if (i == 5) {
                     ex.printStackTrace();
                 }
